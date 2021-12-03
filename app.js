@@ -24,48 +24,78 @@ function operate (operator, a, b) {
            return addNumbers(a ,b);
         case '-' :
            return subNumbers(a, b);
-        case '*' :
+        case 'x' :
            return multiplyNumbers(a, b);
-        case '/' :
+        case '÷' :
            return divideNumbers(a, b);
         default:
-           return 'Did you enter a valid operator ?'
+           return 'error'
     }
 }
-let firstValue;
-let selectedOperator;
+let leftValue = 0,
+    rightValue = 0,
+    selectedOperator,
+    equalClicked;
 
-function updateDisplay() {
-    const display = document.querySelector('.input');
-    const buttons = document.querySelectorAll('.number')
-
-    buttons.forEach((number) => {
+function inputNumber() {
+    const numbers = document.querySelectorAll('.number');
+    numbers.forEach((number) => {
         number.addEventListener('click', () => {
-            display.textContent += number.textContent;
+            const display = document.querySelector('.input');
+            display.textContent +=number.textContent;
         })
     })
 }
 
-function selectOperator() {
-    const operators = document.querySelectorAll('.operator');
+//when operator clicked; save the value on display and clear the display
+function clickOperator () {
     const display = document.querySelector('.input');
+    const operators = document.querySelectorAll('.operator');
 
     operators.forEach((operator) => {
         operator.addEventListener('click', () => {
+            test();
             selectedOperator = operator.textContent;
-            firstValue = parseInt(display.textContent);
+            display.textContent = '';
+            test2();
         })
+    })
+
+}
+
+function clickEqual () {
+    const equalSign = document.querySelector('.equal');
+
+    equalSign.addEventListener('click', () => {
+        test();
+        test2();
     })
 }
 
-function updateOutput() {
-    const input = document.querySelector('.input');
-    const output = document.querySelector('.output');
-    output.textContent = `${firstValue} ${selectedOperator}`
+function test() {
 
-    input.textContent = ''
+    const display = document.querySelector('.input');
+    if (selectedOperator || equalClicked) {
+        rightValue = parseInt(display.textContent);
+    }else{
+        leftValue = parseInt(display.textContent);
+    }
 }
 
-function calculateValue() {
+function test2() {
+    if (leftValue && rightValue) {
+        let result;
+        result = operate(selectedOperator, leftValue, rightValue);
+        console.log(result)
+        leftValue = result;
+    }
+}
 
+function test3() {
+    if (leftValue && rightValue) {
+        let result;
+        result = operate(selectedOperator, leftValue, rightValue);
+        console.log(result)
+        leftValue = result;
+    }
 }
