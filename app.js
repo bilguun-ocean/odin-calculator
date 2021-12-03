@@ -68,14 +68,14 @@ function clickEqual () {
 
     equalSign.addEventListener('click', () => {
         test();
-        test2();
+        test3();
     })
 }
 
 function test() {
 
     const display = document.querySelector('.input');
-    if (selectedOperator || equalClicked) {
+    if (selectedOperator) {
         rightValue = parseInt(display.textContent);
     }else{
         leftValue = parseInt(display.textContent);
@@ -97,5 +97,7 @@ function test3() {
         result = operate(selectedOperator, leftValue, rightValue);
         console.log(result)
         leftValue = result;
+        selectedOperator = '';
+        rightValue = '';
     }
 }
