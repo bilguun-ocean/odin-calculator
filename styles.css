@@ -58,3 +58,7 @@ body {
     color: gray;
     transition: 0.1s ease;
 }
+
+.highlightChoice {
+    border: 2px solid black;
+}
