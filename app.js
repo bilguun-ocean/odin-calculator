@@ -1,18 +1,4 @@
-function addNumbers (a, b) {
-    return a + b;
-}
 
-function subNumbers (a, b) {
-    return a - b;
-}
-
-function multiplyNumbers (a, b) {
-    return a * b;
-}
-
-function divideNumbers (a, b) {
-    return a / b;
-}
 
 /*Create a new function operate that takes an operator 
 and 2 numbers and then calls one of the above functions on the numbers.
@@ -21,13 +7,13 @@ and 2 numbers and then calls one of the above functions on the numbers.
 function operate (operator, a, b) {
     switch(operator){
         case '+' :
-           return addNumbers(a ,b);
+           return a + b;
         case '-' :
-           return subNumbers(a, b);
+           return a - b;
         case 'x' :
-           return multiplyNumbers(a, b);
+           return a * b;
         case '÷' :
-           return divideNumbers(a, b);
+           return a / b;
         default:
            return 'error'
     }
@@ -35,14 +21,14 @@ function operate (operator, a, b) {
 let leftValue = 0,
     rightValue = 0,
     selectedOperator,
-    equalClicked;
+    secondOperator;
 
 function inputNumber() {
     const numbers = document.querySelectorAll('.number');
     numbers.forEach((number) => {
         number.addEventListener('click', () => {
             const display = document.querySelector('.input');
-            display.textContent +=number.textContent;
+            display.textContent +=number.textContent; 
         })
     })
 }
@@ -54,10 +40,11 @@ function clickOperator () {
 
     operators.forEach((operator) => {
         operator.addEventListener('click', () => {
-            test();
-            selectedOperator = operator.textContent;
+            storeValues();
+            storeSecondOperator(operator);
             display.textContent = '';
-            test2();
+            calculateValues();
+            test4();
         })
     })
 
@@ -67,27 +54,32 @@ function clickEqual () {
     const equalSign = document.querySelector('.equal');
 
     equalSign.addEventListener('click', () => {
-        test();
+        storeValues();
         test3();
     })
 }
 
-function test() {
+function storeValues() {
 
     const display = document.querySelector('.input');
     if (selectedOperator) {
         rightValue = parseInt(display.textContent);
     }else{
-        leftValue = parseInt(display.textContent);
+        leftValue = parseInt(display.textContent);  
+        display.classList.add('blink')
     }
 }
 
-function test2() {
+function calculateValues() {
     if (leftValue && rightValue) {
         let result;
         result = operate(selectedOperator, leftValue, rightValue);
         console.log(result)
         leftValue = result;
+    }
+    if (secondOperator) {
+        selectedOperator = secondOperator;
+        secondOperator = '';
     }
 }
 
@@ -101,3 +93,23 @@ function test3() {
         rightValue = '';
     }
 }
+//check if operator was clicked for the second time or not
+function storeSecondOperator(operator) {
+    if (selectedOperator) {
+        secondOperator = operator.textContent;
+    }else{
+        selectedOperator = operator.textContent;
+    }
+}
+
+//if left value is there and operator is clicked, next time input entered, display clears
+
+function test4() {
+    display.classList.add('blink')
+}
+
+
+ const display = document.querySelector('.input');
+ display.addEventListener('transitionend', () => {
+ display.classList.remove('blink');
+ })
