@@ -31,7 +31,7 @@ function inputNumber() {
     const numbers = document.querySelectorAll('.number');
     numbers.forEach((number) => {
         number.addEventListener('click', () => {
-            const display = document.querySelector('.input');
+            const display = document.querySelector('.display');
             display.textContent +=number.textContent;
             if(clearDisplay) display.textContent = '' + number.textContent;
             clearDisplay = false; 
@@ -42,11 +42,15 @@ function inputNumber() {
 
 //when operator clicked; save the value on display and clear the display
 function clickOperator () {
-    const display = document.querySelector('.input');
+    const display = document.querySelector('.display');
     const operators = document.querySelectorAll('.operator');
 
     operators.forEach((operator) => {
         operator.addEventListener('click', () => {
+            if (!display.textContent || display.textContent == '') {
+                clearDisplay = true;
+                return;
+            }
             storeValues();
             storeSecondOperator(operator);
             toggleHighlight(operator);
@@ -62,6 +66,10 @@ function clickEqual () {
     const equalSign = document.querySelector('.equal');
 
     equalSign.addEventListener('click', () => {
+        if (!display.textContent || display.textContent == '') {
+            clearDisplay = true;
+            return;
+        }
         storeValues();
         equalCalculateValues();
         unhighlightOperators();
@@ -70,7 +78,7 @@ function clickEqual () {
 }
 
 function storeValues() {
-    const display = document.querySelector('.input');
+    const display = document.querySelector('.display');
     if (display.textContent || display.textContent == 0 ){
         if (selectedOperator) {
             rightValue = parseInt(display.textContent);
@@ -88,7 +96,7 @@ function calculateValues() {
             display.textContent = 'error';
             return;
         }
-        result = roundDecimal(operate(selectedOperator, leftValue, rightValue));
+        result = operate(selectedOperator, leftValue, rightValue);
         leftValue = result;
     }
     if (secondOperator) {
@@ -111,7 +119,6 @@ function equalCalculateValues() {
         selectedOperator = null;
         rightValue = null;
         display.textContent = leftValue
-        canDelete = false;
     }
 }
 //check if operator was clicked for the second time or not
@@ -177,6 +184,8 @@ function deleteLast() {
     clickEqual();
  })
 
+ 
+
 
 const backspace = document.querySelector('.delete')
 backspace.addEventListener('click', deleteLast)
@@ -184,7 +193,7 @@ backspace.addEventListener('click', deleteLast)
 const AC = document.querySelector('.ac')
 AC.addEventListener('click', clearAll )
 
-const display = document.querySelector('.input');
+const display = document.querySelector('.display');
 display.addEventListener('transitionend', () => {
     display.classList.remove('blink');
 })
