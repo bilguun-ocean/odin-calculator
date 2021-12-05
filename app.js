@@ -14,6 +14,8 @@ function operate (operator, a, b) {
            return a * b;
         case '÷' :
            return a / b;
+        case '%' :
+            return a % b;
         default:
            return 'error'
     }
@@ -63,13 +65,13 @@ function clickEqual () {
         storeValues();
         equalCalculateValues();
         unhighlightOperators();
+        clearDisplay = true;
     })
 }
 
 function storeValues() {
-
     const display = document.querySelector('.input');
-    if (display.textContent){
+    if (display.textContent || display.textContent == 0 ){
         if (selectedOperator) {
             rightValue = parseInt(display.textContent);
         }else{
@@ -80,26 +82,34 @@ function storeValues() {
 }
 
 function calculateValues() {
-    if (leftValue && rightValue) {
+    if (leftValue == 0 || leftValue && rightValue == 0 || rightValue) {
         let result;
-        result = operate(selectedOperator, leftValue, rightValue);
+        if (selectedOperator == '÷' && rightValue == 0) {
+            display.textContent = 'error';
+            return;
+        }
+        result = roundDecimal(operate(selectedOperator, leftValue, rightValue));
         leftValue = result;
     }
     if (secondOperator) {
         selectedOperator = secondOperator;
-        secondOperator = '';
+        secondOperator = null;
     }
     display.textContent = leftValue;
     canDelete = false;
 }
 
 function equalCalculateValues() {
-    if (leftValue && rightValue) {
+    if (leftValue == 0 || leftValue && rightValue == 0 || rightValue) {
         let result;
-        result = operate(selectedOperator, leftValue, rightValue);
+        if (selectedOperator == '÷' && rightValue == 0) {
+            display.textContent = 'error';
+            return;
+        }
+        result = roundDecimal(operate(selectedOperator, leftValue, rightValue));
         leftValue = result;
-        selectedOperator = '';
-        rightValue = '';
+        selectedOperator = null;
+        rightValue = null;
         display.textContent = leftValue
         canDelete = false;
     }
@@ -141,12 +151,17 @@ function highlightSelectedOperator (operator) {
 }
 
 function clearAll() {
-    leftValue = 0,
-    rightValue = 0,
+    leftValue = null,
+    rightValue = null,
     selectedOperator = null,
     secondOperator = null,
     clearDisplay = false;
     display.textContent = ''
+    unhighlightOperators();
+}
+
+function roundDecimal(a) {
+    return Math.round(a * 1000) / 1000;
 }
 
 function deleteLast() {
