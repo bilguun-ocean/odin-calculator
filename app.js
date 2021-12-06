@@ -32,6 +32,10 @@ function inputNumber() {
     numbers.forEach((number) => {
         number.addEventListener('click', () => {
             const display = document.querySelector('.display');
+            if(display.textContent.length > 8 || display.textContent == 'error') {
+                display.textContent  = 'error'
+                return;
+            }
             display.textContent +=number.textContent;
             if(clearDisplay) display.textContent = '' + number.textContent;
             clearDisplay = false; 
@@ -81,9 +85,9 @@ function storeValues() {
     const display = document.querySelector('.display');
     if (display.textContent || display.textContent == 0 ){
         if (selectedOperator) {
-            rightValue = parseInt(display.textContent);
+            rightValue = parseFloat(display.textContent);
         }else{
-            leftValue = parseInt(display.textContent);  
+            leftValue = parseFloat(display.textContent);  
         }
     }
 
@@ -182,6 +186,7 @@ function deleteLast() {
     inputNumber();
     clickOperator();
     clickEqual();
+    hoverEffect();
  })
 
  
@@ -190,6 +195,7 @@ function deleteLast() {
 const backspace = document.querySelector('.delete')
 backspace.addEventListener('click', deleteLast)
 
+
 const AC = document.querySelector('.ac')
 AC.addEventListener('click', clearAll )
 
@@ -197,3 +203,15 @@ const display = document.querySelector('.display');
 display.addEventListener('transitionend', () => {
     display.classList.remove('blink');
 })
+function hoverEffect() {
+    const buttons = document.querySelectorAll('.button');
+
+    buttons.forEach((button) => {
+        button.addEventListener('mouseenter', () => {
+            buttons.forEach((button) => {
+                button.style.filter = 'brightness(1.0)'
+            })
+            button.style.filter = 'brightness(1.2)'
+        })
+    })
+}
