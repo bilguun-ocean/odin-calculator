@@ -32,7 +32,7 @@ function inputNumber() {
     numbers.forEach((number) => {
         number.addEventListener('click', () => {
             const display = document.querySelector('.display');
-            if(display.textContent.length > 8 || display.textContent == 'error') {
+            if(display.textContent.length > 7 || display.textContent == 'error') {
                 display.textContent  = 'error'
                 return;
             }
@@ -43,6 +43,19 @@ function inputNumber() {
         })
     })
 }
+function calculateWhenOperatorClicked(operator) {
+    if (!display.textContent || display.textContent == '') {
+        clearDisplay = true;
+        return;
+    }
+    storeValues();
+    storeSecondOperator(operator);
+    toggleHighlight(operator);
+    calculateValues();
+    blinkDisplay();
+    clearDisplay = true;
+}
+
 
 //when operator clicked; save the value on display and clear the display
 function clickOperator () {
@@ -51,34 +64,26 @@ function clickOperator () {
 
     operators.forEach((operator) => {
         operator.addEventListener('click', () => {
-            if (!display.textContent || display.textContent == '') {
-                clearDisplay = true;
-                return;
-            }
-            storeValues();
-            storeSecondOperator(operator);
-            toggleHighlight(operator);
-            calculateValues();
-            blinkDisplay();
-            clearDisplay = true;
+            calculateWhenOperatorClicked(operator);
         })
     })
 
+}
+function calculateWhenEqualClicked() {
+    if (!display.textContent || display.textContent == '') {
+        clearDisplay = true;
+        return;
+    }
+    storeValues();
+    equalCalculateValues();
+    unhighlightOperators();
+    clearDisplay = true;
 }
 
 function clickEqual () {
     const equalSign = document.querySelector('.equal');
 
-    equalSign.addEventListener('click', () => {
-        if (!display.textContent || display.textContent == '') {
-            clearDisplay = true;
-            return;
-        }
-        storeValues();
-        equalCalculateValues();
-        unhighlightOperators();
-        clearDisplay = true;
-    })
+    equalSign.addEventListener('click', calculateWhenEqualClicked);
 }
 
 function storeValues() {
@@ -214,4 +219,57 @@ function hoverEffect() {
             button.style.filter = 'brightness(1.2)'
         })
     })
+}
+
+//adding a keyboard support
+window.addEventListener('keydown', detectKey)
+
+function detectKey(e) {
+    //detecting number keys
+    const numbers = document.querySelectorAll('.number');
+    if (e.key >= 0 && e.key <= 9) {
+        numbers.forEach((number) => {
+            if (number.textContent == e.key){
+                const display = document.querySelector('.display');
+                if(display.textContent.length > 8 || display.textContent == 'error') {
+                    display.textContent  = 'error'
+                    return;
+                }
+                display.textContent +=number.textContent;
+                if(clearDisplay) display.textContent = '' + number.textContent;
+                clearDisplay = false; 
+                canDelete = true;
+            }
+        })
+}
+
+    //detecting operators
+    const operators = document.querySelectorAll('.operator');
+    const divide = document.querySelector('.divide')
+    const multiply = document.querySelector('.multiply')
+    if (e.key == '/' || e.key == '*' || e.key == '-' || e.key == '+' || e.key == '/' || e.key == '%' ) {
+        if (e.key == '/') {
+            calculateWhenOperatorClicked(divide);
+            
+        }else if (e.key == '*') {
+            calculateWhenOperatorClicked(multiply);
+        }
+        operators.forEach((operator) => {
+            if (e.key == operator.textContent) {
+                 calculateWhenOperatorClicked(operator);
+            }
+        })
+        return; //don't have to check others
+    }
+
+    //detecting equal 
+    if (e.key == '=' || e.key == 'Enter') {
+        calculateWhenEqualClicked();
+        return;
+    }
+
+    //detecting backspace
+    if (e.key == 'Backspace') {
+        deleteLast();
+    }
 }
