@@ -26,6 +26,7 @@ let leftValue,
     secondOperator,
     canDelete = true;
     clearDisplay = false;
+    decimalUsed = 0;
 
 function inputNumber() {
     const numbers = document.querySelectorAll('.number');
@@ -85,6 +86,7 @@ function clickEqual () {
 
     equalSign.addEventListener('click', calculateWhenEqualClicked);
 }
+
 
 function storeValues() {
     const display = document.querySelector('.display');
